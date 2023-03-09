@@ -32,6 +32,8 @@ async function run(): Promise<void> {
     const failure: boolean =
       (core.getInput('fail') || 'false').toUpperCase() === 'TRUE' ||
       allow_failure
+    const failure_if_exists: boolean =
+      (core.getInput('failure_if_exists') || 'false').toUpperCase() === 'TRUE' 
     const fileList: string[] = files
       .split(',')
       .map((item: string) => item.trim())
@@ -55,6 +57,10 @@ async function run(): Promise<void> {
       }
       core.setOutput('files_exists', 'false')
     } else {
+      if (failure_if_exists)
+      {
+        core.setFailed(`failed with all file existing.`)
+      }
       core.info('🎉 All files exist')
       core.setOutput('files_exists', 'true')
     }
